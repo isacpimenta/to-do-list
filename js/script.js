@@ -17,17 +17,17 @@ const saveTodo = (text) => {
     todo.appendChild(todoTitle);
 
     const doneBtn = document.createElement("button");
-    doneBtn.classList.add("finish-todo");
+    doneBtn.classList.add("finish-to-do");
     doneBtn.innerHTML = '<i class="fa-solid fa-check"></i>';
     todo.appendChild(doneBtn);
     
     const editBtn = document.createElement("button");
-    editBtn.classList.add("edit-todo");
+    editBtn.classList.add("edit-to-do");
     editBtn.innerHTML = '<i class="fa-solid fa-pen"></i>';
     todo.appendChild(editBtn);
     
     const deleteBtn = document.createElement("button");
-    deleteBtn.classList.add("remove-todo");
+    deleteBtn.classList.add("remove-to-do");
     deleteBtn.innerHTML = '<i class="fa-solid fa-xmark"></i>';
     todo.appendChild(deleteBtn);
 
@@ -48,3 +48,23 @@ todoForm.addEventListener("submit", (e) => {
         saveTodo(inputValue);
     } 
 });
+
+document.addEventListener("click", (e) => {
+    const targetEl = e.target
+    const parentEl = targetEl.closest("div");
+
+    if(targetEl.classList.contains("finish-to-do")){
+        parentEl.classList.toggle("done")
+        console.log("Clicou para finalizar")
+    }
+
+    if(targetEl.classList.contains("remove-to-do")){
+        parentEl.remove()
+        console.log("Clicou para remover")
+    }
+    
+    if(targetEl.classList.contains("edit-to-do")){
+        console.log("Clicou para editar")
+        
+    }
+})
