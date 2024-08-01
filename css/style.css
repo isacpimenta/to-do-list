@@ -11,6 +11,8 @@ body{
     background-image: url("../img/bg.jpg");
     background-position: center;
     background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
 }
 
 button {
@@ -158,4 +160,49 @@ input, select {
     color: #fff;
     text-decoration: line-through;
     font-style: italic;
+}
+
+/* Modo Escuro */
+
+#toggle-dark-mode {
+    margin: 1rem 1rem;
+}
+
+.dark-mode {
+    background-color: #102F5e;
+    color: #fff;
+}
+
+.dark-mode button {
+    background-color: #fff;
+    color: #102F5e;
+}
+
+.dark-mode button:hover {
+    background-color: #555;
+    color: #fff;
+}
+
+.dark-mode .to-do-conteiner {
+    background-color: #102F5e;
+}
+
+.dark-mode .to-do {
+    border-bottom: 1px solid #444;
+}
+
+.dark-mode p {
+    color: #fff;
+}
+
+.dark-mode h1 {
+    color: #fff;
+}
+
+.dark-mode h4{
+    color: #fff;
+}
+
+.dark-mode h3{
+    color: #fff;
 }

@@ -98,7 +98,7 @@ document.addEventListener("DOMContentLoaded", () => {
         editBtn.classList.add("edit-to-do");
         editBtn.innerHTML = '<i class="fa-solid fa-pen"></i>';
         todo.appendChild(editBtn);
-        
+
         const deleteBtn = document.createElement("button");
         deleteBtn.classList.add("remove-to-do");
         deleteBtn.innerHTML = '<i class="fa-solid fa-xmark"></i>';
@@ -253,4 +253,26 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     loadTodos();
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+    const toggleButton = document.getElementById('toggle-dark-mode');
+
+    // Verifica se o modo escuro foi ativado anteriormente
+    const darkModeEnabled = localStorage.getItem('darkMode') === 'enabled';
+    if (darkModeEnabled) {
+        document.body.classList.add('dark-mode');
+        toggleButton.innerHTML = '<i class="fa-sharp fa-solid fa-sun"></i>';
+    }
+
+    toggleButton.addEventListener('click', () => {
+        document.body.classList.toggle('dark-mode');
+        if (document.body.classList.contains('dark-mode')) {
+            toggleButton.innerHTML = '<i class="fa-sharp fa-solid fa-sun"></i>';
+            localStorage.setItem('darkMode', 'enabled');
+        } else {
+            toggleButton.innerHTML = '<i class="fa-sharp fa-solid fa-moon"></i>';
+            localStorage.setItem('darkMode', 'disabled');
+        }
+    });
 });
