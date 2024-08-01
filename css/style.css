@@ -70,13 +70,13 @@ input, select {
 
 /* To Do Form */
 
-#to-do-form, #edit-form {
+#to-do-form, #edit-form,#bg-alter {
     padding: 1rem;
     border-bottom: 1px solid #ccc;
 
 }
 
-#to-do-form p, #edit-form p {
+#to-do-form p, #edit-form p, #bg-alter p {
     margin-bottom: .5rem;
     font-weight: bold;
 }
@@ -164,7 +164,11 @@ input, select {
 
 /* Modo Escuro */
 
-#toggle-dark-mode {
+#set-background {
+    margin-top: 1rem;
+}
+
+#toggle-dark-mode, #show-upload{
     margin: 1rem 1rem;
 }
 
