@@ -82,65 +82,108 @@ document.addEventListener("DOMContentLoaded", () => {
     const loadTodos = () => {
         const todos = getTodosLocalStorage();
         todos.forEach((todo) => {
-            saveTodo(todo.text, todo.done);
+            const todoElement = document.createElement("div");
+            todoElement.classList.add("to-do");
+    
+            const todoTitle = document.createElement("h3");
+            todoTitle.innerText = todo.text;
+            todoElement.appendChild(todoTitle);
+    
+            const doneBtn = document.createElement("button");
+            doneBtn.classList.add("finish-to-do");
+            doneBtn.innerHTML = '<i class="fa-solid fa-check" aria-label="Marcar como concluído"></i>';
+            todoElement.appendChild(doneBtn);
+    
+            const editBtn = document.createElement("button");
+            editBtn.classList.add("edit-to-do");
+            editBtn.innerHTML = '<i class="fa-solid fa-pen" aria-label="Editar tarefa"></i>';
+            todoElement.appendChild(editBtn);
+    
+            const deleteBtn = document.createElement("button");
+            deleteBtn.classList.add("remove-to-do");
+            deleteBtn.innerHTML = '<i class="fa-solid fa-xmark" aria-label="Remover tarefa"></i>';
+            todoElement.appendChild(deleteBtn);
+    
+            if (todo.done) {
+                todoElement.classList.add("done");
+            }
+    
+            todoList.appendChild(todoElement);
         });
     };
+    
 
     // FUNÇÕES
     const saveTodo = (text, done = 0) => {
+        const todos = getTodosLocalStorage();
+        const todoExists = todos.some((todo) => todo.text === text);
+    
+        if (todoExists) {
+            alert('A tarefa já existe!');
+            return;
+        }
+    
         console.log("saveTodo chamado com texto:", text);
-
+    
         const todo = document.createElement("div");
         todo.classList.add("to-do");
-
+    
         const todoTitle = document.createElement("h3");
         todoTitle.innerText = text;
         todo.appendChild(todoTitle);
-
+    
         const doneBtn = document.createElement("button");
         doneBtn.classList.add("finish-to-do");
         doneBtn.innerHTML = '<i class="fa-solid fa-check" aria-label="Marcar como concluído"></i>';
         todo.appendChild(doneBtn);
-
+    
         const editBtn = document.createElement("button");
         editBtn.classList.add("edit-to-do");
         editBtn.innerHTML = '<i class="fa-solid fa-pen" aria-label="Editar tarefa"></i>';
         todo.appendChild(editBtn);
-
+    
         const deleteBtn = document.createElement("button");
         deleteBtn.classList.add("remove-to-do");
         deleteBtn.innerHTML = '<i class="fa-solid fa-xmark" aria-label="Remover tarefa"></i>';
         todo.appendChild(deleteBtn);
-
+    
         if (done) {
             todo.classList.add("done");
         }
-
+    
         saveTodoLocalStorage({ text, done });
         todoList.appendChild(todo);
-
+    
         todoInput.value = "";
         todoInput.focus();
     };
 
     const toggleForms = () => {
-        editForm.classList.toggle("hide");
-        todoForm.classList.toggle("hide");
-        todoList.classList.toggle("hide");
+        editForm.classList.add("hide");
+        todoForm.classList.remove("hide");
+        todoList.classList.remove("hide");
         bgAlterForm.classList.add("hide"); // Oculta o formulário de alterar imagem de fundo
         toolbar.classList.remove("hide"); // Garante que a toolbar seja visível
     };
 
     const updateTodo = (text) => {
-        const todos = document.querySelectorAll(".to-do");
-        todos.forEach((todo) => {
+        const todos = getTodosLocalStorage();
+        const todoExists = todos.some((todo) => todo.text === text && todo.text !== oldInputValue);
+    
+        if (todoExists) {
+            alert('A tarefa já existe!');
+            return;
+        }
+    
+        const todosElements = document.querySelectorAll(".to-do");
+        todosElements.forEach((todo) => {
             const todoTitle = todo.querySelector("h3");
             if (todoTitle.innerText === oldInputValue) {
                 todoTitle.innerText = text;
                 updateTodoLocalStorage(oldInputValue, text);
             }
         });
-    };
+    };    
 
     const getSearchedTodos = (search) => {
         const todos = document.querySelectorAll(".to-do");
@@ -201,7 +244,11 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         if (targetEl.classList.contains("edit-to-do")) {
-            toggleForms();
+            editForm.classList.remove("hide");
+            todoForm.classList.add("hide");
+            todoList.classList.add("hide");
+            bgAlterForm.classList.add("hide");
+            toolbar.classList.remove("hide");
             editInput.value = todoTitle;
             oldInputValue = todoTitle;
         }
@@ -257,32 +304,35 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     // Mostrar Formulário de Alteração de Imagem
-showUploadButton.addEventListener('click', (e) => {
-    e.preventDefault();
-    console.log('Botão de upload clicado'); // Verifique se este log aparece no console
-    bgAlterForm.classList.remove('hide');
-    todoForm.classList.add('hide');
-    editForm.classList.add('hide');
-    toolbar.style.display = 'none';
-});
+    showUploadButton.addEventListener('click', (e) => {
+        e.preventDefault();
+        console.log('Botão de upload clicado'); // Verifique se este log aparece no console
+        bgAlterForm.classList.remove('hide');
+        todoForm.classList.add('hide');
+        editForm.classList.add('hide');
+        toolbar.style.display = 'none';
+    });
 
-// Aplicar Imagem de Fundo e alternar formulários
-setBackgroundButton.addEventListener('click', (e) => {
-    e.preventDefault();
-    const file = fileInput.files[0];
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            document.body.style.backgroundImage = `url(${e.target.result})`;
-            localStorage.setItem('background', e.target.result);
-            toggleForms(); // Alterna os formulários quando a imagem é aplicada
-        };
-        reader.readAsDataURL(file);
-    } else {
-        alert('Por favor, selecione uma imagem primeiro.');
-    }
-});
-
+    // Aplicar Imagem de Fundo e alternar formulários
+    setBackgroundButton.addEventListener('click', (e) => {
+        e.preventDefault();
+        const file = fileInput.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                document.body.style.backgroundImage = `url(${e.target.result})`;
+                localStorage.setItem('background', e.target.result);
+                // Alterar formulários e toolbar
+                bgAlterForm.classList.add("hide");
+                todoForm.classList.remove("hide");
+                editForm.classList.add("hide");
+                toolbar.style.display = 'flex';
+            };
+            reader.readAsDataURL(file);
+        } else {
+            alert('Por favor, selecione uma imagem primeiro.');
+        }
+    });    
 
     // Restaurar imagem de fundo ao carregar a página
     const storedBackground = localStorage.getItem('background');
